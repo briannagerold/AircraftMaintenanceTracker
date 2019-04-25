@@ -4,24 +4,24 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Log {
+public class LogEntry {
 
     private String key;
     private String dateStr;
     private String aircraftNum;
     private String description;
 
-    public Log(){
+    public LogEntry(){
 
     }
 
-    public Log(String dateStr, String aircraftNum, String description){
+    public LogEntry(String dateStr, String aircraftNum, String description){
         setDateStr(dateStr);
         setAircraftNum(aircraftNum);
         setDescription(description);
     }
 
-    public Log(String key, String dateStr, String aircraftNum, String description){
+    public LogEntry(String key, String dateStr, String aircraftNum, String description){
         setKey(key);
         setDateStr(dateStr);
         setAircraftNum(aircraftNum);
@@ -36,14 +36,10 @@ public class Log {
         this.dateStr = dateStr;
     }
 
-    public void setCurrentDate(){
-        SimpleDateFormat formater = new SimpleDateFormat("MM/dd/yyyy");
-        dateStr = formater.format(Calendar.getInstance().getTime());
-    }
 
     public void setAircraftNum(String aircraftNum){
         Integer num = Integer.parseInt(aircraftNum);
-        if (num < 10000 && num > 99){
+        if (num < 10000 && num > 99 && !aircraftNum.isEmpty()){
             this.aircraftNum = aircraftNum;
         }
         else {
