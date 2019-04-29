@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
@@ -45,14 +46,19 @@ public class NewEntryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 LogEntry logEntry = new LogEntry(txtDate.getText().toString(), txtAircraftNumber.getText().toString(), txtDescription.getText().toString());
 
-                if(logEntry.getAircreaftNumInt() != 0 ) {
+                if(logEntry.valid()) {
                     //ADD CODE TO ADD TO THE LIST AND THE DATABASE
+//                    FirebaseData fbData = new FirebaseData();
+//                    fbData.open();
+//
+//                    fbData.createLogEntry(logEntry);
 
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
                     startActivity(intent);
                 }
                 else{
                     txtAircraftNumber.setText(logEntry.getAircraftNum());
+                    txtDate.setText(logEntry.getDateStr());
                 }
             }
         });

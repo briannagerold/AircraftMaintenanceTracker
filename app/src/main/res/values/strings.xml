@@ -9,4 +9,5 @@
     <string name="Login">Login with Google</string>
     <string name="LoginInstructions">You are currently logged out. \n Click below to login with Google.</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="Save">Save</string>
 </resources>

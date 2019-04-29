@@ -11,6 +11,9 @@ public class LogEntry {
     private String aircraftNum;
     private String description;
 
+    private final String dateError = "Enter as MM/DD/YYYY";
+    private final String numError = "Enter a valid number";
+
     public LogEntry(){
 
     }
@@ -33,17 +36,27 @@ public class LogEntry {
     }
 
     public void setDateStr(String dateStr){
-        this.dateStr = dateStr;
+        this.dateStr = dateError;
+        if(dateStr.length() == 10){
+            char firstSlash = dateStr.charAt(2);
+            char secondSlash = dateStr.charAt(5);
+
+            if(firstSlash == '/' && secondSlash == '/'){
+                this.dateStr = dateStr;
+            }
+        }
     }
 
 
     public void setAircraftNum(String aircraftNum){
-        Integer num = Integer.parseInt(aircraftNum);
-        if (num < 10000 && num > 99 && !aircraftNum.isEmpty()){
-            this.aircraftNum = aircraftNum;
+        if(!aircraftNum.equals("")) {
+            Integer num = Integer.parseInt(aircraftNum);
+            if (num < 10000 && num > 99) {
+                this.aircraftNum = aircraftNum;
+            }
         }
         else {
-            this.aircraftNum = "Error";
+            this.aircraftNum = numError;
         }
     }
 
@@ -64,7 +77,7 @@ public class LogEntry {
     }
 
     public int getAircreaftNumInt(){
-        if(!aircraftNum.equals("Error")){
+        if(!aircraftNum.equals(numError)){
             return Integer.parseInt(aircraftNum);
         }
             return 0;
@@ -72,5 +85,10 @@ public class LogEntry {
 
     public String getDescription (){
         return description;
+    }
+
+    public boolean valid(){
+        return !(getAircraftNum().equals(numError) || getDateStr().equals(dateError));
+
     }
 }
