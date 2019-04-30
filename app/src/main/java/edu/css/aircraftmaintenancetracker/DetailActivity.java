@@ -6,8 +6,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
+
+    TextView txtDate, txtDescription, txtNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,19 @@ public class DetailActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        txtDate = findViewById(R.id.txtDateDetail);
+        txtDescription = findViewById(R.id.txtDescriptionDetail);
+        txtNum = findViewById(R.id.txtAircraftNumberDetail);
+
+        Bundle extras = getIntent().getExtras();
+        LogEntry logEntry = (LogEntry) extras.getSerializable(MainActivity.LOG_ENTRY_TAG);
+
+        txtDate.setText(logEntry.getDateStr());
+        txtNum.setText(logEntry.getAircraftNum());
+        txtDescription.setText(logEntry.getDescription());
+
+
     }
 
 }

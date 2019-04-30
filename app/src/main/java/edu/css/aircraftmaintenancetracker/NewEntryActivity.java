@@ -2,18 +2,13 @@ package edu.css.aircraftmaintenancetracker;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,9 +27,9 @@ public class NewEntryActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        txtDate = findViewById(R.id.txtDate);
-        txtAircraftNumber = findViewById(R.id.txtAircraftNumber);
-        txtDescription = findViewById(R.id.txtDescription);
+        txtDate = findViewById(R.id.txtDateDetail);
+        txtAircraftNumber = findViewById(R.id.txtAircraftNumberDetail);
+        txtDescription = findViewById(R.id.txtDescriptionDetail);
 
         btnSave = findViewById(R.id.btnSave);
 
@@ -51,7 +46,7 @@ public class NewEntryActivity extends AppCompatActivity {
                 if(logEntry.valid()) {
                     //ADD CODE TO ADD TO THE LIST AND THE DATABASE
                     FirebaseData fbData = new FirebaseData();
-                    fbData.open(NewEntryActivity.this);
+                    fbData.open();
 
                     fbData.createLogEntry(logEntry);
 

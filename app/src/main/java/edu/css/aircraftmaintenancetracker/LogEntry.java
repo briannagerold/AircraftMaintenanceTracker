@@ -1,10 +1,11 @@
 package edu.css.aircraftmaintenancetracker;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class LogEntry {
+public class LogEntry implements Serializable {
 
     private String key;
     private String dateStr;
@@ -76,12 +77,12 @@ public class LogEntry {
         return aircraftNum;
     }
 
-    public int getAircreaftNumInt(){
-        if(!aircraftNum.equals(numError)){
-            return Integer.parseInt(aircraftNum);
-        }
-            return 0;
-    }
+//    public int getAircreaftNumInt(){
+//        if(!aircraftNum.equals(numError)){
+//            return Integer.parseInt(aircraftNum);
+//        }
+//            return 0;
+//    }
 
     public String getDescription (){
         return description;

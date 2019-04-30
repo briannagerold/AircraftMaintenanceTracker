@@ -12,56 +12,76 @@
         android:id="@+id/lblAircraft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="44dp"
-        android:layout_marginEnd="296dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/AircraftNumber"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtAircraftNumber"
-        android:layout_width="256dp"
-        android:layout_height="19dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="44dp"
-        app:layout_constraintStart_toEndOf="@+id/lblAircraft"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/txtAircraftNumberDetail"
+        android:layout_width="309dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.478"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblAircraft" />
 
     <TextView
         android:id="@+id/lblDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="296dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/Date"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lblAircraft" />
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtAircraftNumberDetail" />
 
     <TextView
-        android:id="@+id/txtDate"
-        android:layout_width="260dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="28dp"
-        app:layout_constraintStart_toEndOf="@+id/lblDate"
-        app:layout_constraintTop_toBottomOf="@+id/txtAircraftNumber" />
+        android:id="@+id/txtDateDetail"
+        android:layout_width="294dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="8dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblDate" />
 
     <TextView
         android:id="@+id/lblDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="296dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/Description"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lblDate" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtDateDetail" />
 
     <TextView
-        android:id="@+id/txtDescription"
-        android:layout_width="261dp"
-        android:layout_height="229dp"
-        android:layout_marginStart="16dp"
+        android:id="@+id/txtDescriptionDetail"
+        android:layout_width="312dp"
+        android:layout_height="237dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="28dp"
-        app:layout_constraintStart_toEndOf="@+id/lblDescription"
-        app:layout_constraintTop_toBottomOf="@+id/txtDate" />
+        android:layout_marginEnd="8dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblDescription" />
 </android.support.constraint.ConstraintLayout>

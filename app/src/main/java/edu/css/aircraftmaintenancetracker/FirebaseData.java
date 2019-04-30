@@ -14,13 +14,13 @@ import java.util.List;
 public class FirebaseData {
 
     DatabaseReference dbRef;
-    public static final String DataTagAll = "AircraftMaintenanceTracker";
-    public static final String DataTagType = "AircraftMaintenanceTracker/Type";
+    public static final String DataTag = "AircraftMaintenanceTracker";
 
-    public DatabaseReference open(Context context){
-        FirebaseApp.initializeApp(context);
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        dbRef = database.getReference(DataTagAll);
+    private FirebaseDatabase database;
+
+    public DatabaseReference open(){
+        database = FirebaseDatabase.getInstance();
+        dbRef = database.getReference(DataTag);
         return dbRef;
     }
 
@@ -30,16 +30,10 @@ public class FirebaseData {
 
     public LogEntry createLogEntry(LogEntry logEntry){
         //get a new key
-        String key = dbRef.child(DataTagAll).push().getKey();
+        String key = dbRef.child(DataTag).push().getKey();
 
-        //get the aircraft type (first 2 digits of num)
-        int type = logEntry.getAircreaftNumInt() / 100;
-        String typeStr = type + "";
-
-
+        //put user first
         dbRef.child(key).setValue(logEntry);
-
-        dbRef.child("Aircraft").child(typeStr).child(logEntry.getAircraftNum()).child(key).setValue(logEntry);
 
         return logEntry;
     }
@@ -48,7 +42,7 @@ public class FirebaseData {
         List<LogEntry> logList = new ArrayList<LogEntry>();
         for (DataSnapshot data : dataSnapshot.getChildren()) {
             LogEntry logEntry = data.getValue(LogEntry.class);
-            logList.add(logEntry);
+            logList.add(0,logEntry);
         }
         return logList;
     }
