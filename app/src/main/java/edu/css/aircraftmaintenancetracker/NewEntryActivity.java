@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -26,6 +27,7 @@ public class NewEntryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_new_entry);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,10 +50,10 @@ public class NewEntryActivity extends AppCompatActivity {
 
                 if(logEntry.valid()) {
                     //ADD CODE TO ADD TO THE LIST AND THE DATABASE
-//                    FirebaseData fbData = new FirebaseData();
-//                    fbData.open();
-//
-//                    fbData.createLogEntry(logEntry);
+                    FirebaseData fbData = new FirebaseData();
+                    fbData.open(NewEntryActivity.this);
+
+                    fbData.createLogEntry(logEntry);
 
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
                     startActivity(intent);

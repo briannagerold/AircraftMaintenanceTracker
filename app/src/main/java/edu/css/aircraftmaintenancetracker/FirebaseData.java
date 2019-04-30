@@ -1,7 +1,9 @@
 package edu.css.aircraftmaintenancetracker;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -15,7 +17,8 @@ public class FirebaseData {
     public static final String DataTagAll = "AircraftMaintenanceTracker";
     public static final String DataTagType = "AircraftMaintenanceTracker/Type";
 
-    public DatabaseReference open(){
+    public DatabaseReference open(Context context){
+        FirebaseApp.initializeApp(context);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         dbRef = database.getReference(DataTagAll);
         return dbRef;
