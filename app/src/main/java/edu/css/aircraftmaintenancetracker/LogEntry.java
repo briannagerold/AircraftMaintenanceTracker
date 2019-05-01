@@ -16,7 +16,9 @@ public class LogEntry implements Serializable {
     private final String numError = "Enter a valid number";
 
     public LogEntry(){
-
+        dateStr = "";
+        aircraftNum = "";
+        description = "";
     }
 
     public LogEntry(String dateStr, String aircraftNum, String description){

@@ -17,7 +17,8 @@ public class NewEntryActivity extends AppCompatActivity {
 
     EditText txtDate, txtAircraftNumber, txtDescription;
     Button btnSave;
-
+    LogEntry logEntry = new LogEntry();
+    FirebaseData fbData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,9 @@ public class NewEntryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_entry);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        fbData = new FirebaseData();
+        fbData.open();
 
         txtDate = findViewById(R.id.txtDateDetail);
         txtAircraftNumber = findViewById(R.id.txtAircraftNumberDetail);
@@ -36,26 +40,30 @@ public class NewEntryActivity extends AppCompatActivity {
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         String dateStr = formatter.format(Calendar.getInstance().getTime());
 
-        txtDate.setText(dateStr);
 
+        Bundle extras = getIntent().getExtras();
+        logEntry = (LogEntry) extras.getSerializable(MainActivity.LOG_ENTRY_TAG);
+
+        if(logEntry.getDateStr().isEmpty()){
+            txtDate.setText(dateStr);
+        }
+        else {
+            txtDate.setText(logEntry.getDateStr());
+            txtAircraftNumber.setText(logEntry.getAircraftNum());
+            txtDescription.setText(logEntry.getDescription());
+        }
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogEntry logEntry = new LogEntry(txtDate.getText().toString(), txtAircraftNumber.getText().toString(), txtDescription.getText().toString());
+                LogEntry newLogEntry = new LogEntry(txtDate.getText().toString(), txtAircraftNumber.getText().toString(), txtDescription.getText().toString());
 
-                if(logEntry.valid()) {
-                    //ADD CODE TO ADD TO THE LIST AND THE DATABASE
-                    FirebaseData fbData = new FirebaseData();
-                    fbData.open();
-
-                    fbData.createLogEntry(logEntry);
-
+                if(newLogEntry.valid()) {
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
                     startActivity(intent);
                 }
                 else{
-                    txtAircraftNumber.setText(logEntry.getAircraftNum());
-                    txtDate.setText(logEntry.getDateStr());
+                    txtAircraftNumber.setText(newLogEntry.getAircraftNum());
+                    txtDate.setText(newLogEntry.getDateStr());
                 }
             }
         });

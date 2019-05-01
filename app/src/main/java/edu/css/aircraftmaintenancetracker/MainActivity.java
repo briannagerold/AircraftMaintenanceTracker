@@ -14,10 +14,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 import java.util.List;
 
@@ -29,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<LogEntry> logEntryAdapter;
     ListView listViewLogs;
     public static final String LOG_ENTRY_TAG = "LogEntry";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,21 +68,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        listViewLogs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                LogEntry logEntry = logEntryList.get(position);
-//
-//                Intent intent = new Intent(view.getContext(), DetailActivity.class);
-//                intent.putExtra(LOG_ENTRY_TAG, logEntry);
-//                startActivity(intent);
-//            }
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                //Another interface callback
-//            }
-//        });
-
 
     }
 
@@ -97,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
     @Override

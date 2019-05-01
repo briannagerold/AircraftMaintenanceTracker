@@ -9,18 +9,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FirebaseData {
 
     DatabaseReference dbRef;
-    public static final String DataTag = "AircraftMaintenanceTracker";
+    public static final String DATA_TAG = "AircraftMaintenanceTracker";
 
     private FirebaseDatabase database;
 
     public DatabaseReference open(){
         database = FirebaseDatabase.getInstance();
-        dbRef = database.getReference(DataTag);
+        dbRef = database.getReference(DATA_TAG);
         return dbRef;
     }
 
@@ -30,7 +32,7 @@ public class FirebaseData {
 
     public LogEntry createLogEntry(LogEntry logEntry){
         //get a new key
-        String key = dbRef.child(DataTag).push().getKey();
+        String key = dbRef.child(DATA_TAG).push().getKey();
 
         //put user first
         dbRef.child(key).setValue(logEntry);
