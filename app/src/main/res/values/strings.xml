@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="Search">Search</string>
     <string name="Date">Date:</string>
-    <string name="AircraftNumber">Aircraft Number:</string>
+    <string name="AircraftNumber">Ship Number:</string>
     <string name="Description">Description:</string>
     <string name="title_activity_new_entry">NewEntryActivity</string>
     <string name="Login">Login with Google</string>
@@ -11,4 +11,13 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="Save">Save</string>
     <string name="Logout">Logout</string>
+    <string name="PlaneType">Plane Type:</string>
+    <string name="All">Show All</string>
+
+    <string-array name="SearchTypes">
+        <item>Date</item>
+        <item>Ship #</item>
+        <item>Plane Type</item>
+        <item>Description</item>
+    </string-array>
 </resources>

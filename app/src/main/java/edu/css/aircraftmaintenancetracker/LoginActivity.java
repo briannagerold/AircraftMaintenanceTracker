@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
@@ -33,6 +34,15 @@ public class LoginActivity extends AppCompatActivity {
                 googleSignIn();
             }
         });
+
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
 
@@ -49,9 +59,6 @@ public class LoginActivity extends AppCompatActivity {
             if(account != null) {
                 userEmail = account.getEmail();
 
-                Intent intent = new Intent(this, MainActivity.class);
-                
-                startActivity(intent);
             }
         } catch (ApiException e) {
             //log the exception if there is an error
@@ -68,6 +75,12 @@ public class LoginActivity extends AppCompatActivity {
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
+
+
+            Intent intent = getIntent();
+            intent.putExtra(MainActivity.LOG_ENTRY_TAG, userEmail);
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 

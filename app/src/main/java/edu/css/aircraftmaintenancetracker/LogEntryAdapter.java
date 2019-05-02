@@ -36,7 +36,7 @@ public class LogEntryAdapter extends ArrayAdapter<LogEntry> {
         TextView txtDescription = view.findViewById(R.id.lblDescription);
 
         txtDate.setText(logEntry.getDateStr());
-        txtNum.setText(logEntry.getAircraftNum());
+        txtNum.setText(logEntry.getShipNum() + " - " + logEntry.getPlaneType());
         txtDescription.setText(logEntry.getDescription());
 
         return(view);

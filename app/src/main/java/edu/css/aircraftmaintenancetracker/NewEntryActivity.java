@@ -15,10 +15,11 @@ import java.util.Calendar;
 
 public class NewEntryActivity extends AppCompatActivity {
 
-    EditText txtDate, txtAircraftNumber, txtDescription;
+    EditText txtDate, txtAircraftNumber, txtDescription, txtType;
     Button btnSave;
     LogEntry logEntry = new LogEntry();
     FirebaseData fbData;
+    String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +29,17 @@ public class NewEntryActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fbData = new FirebaseData();
-        fbData.open();
+
+        Bundle extras = getIntent().getExtras();
+        user = extras.getString(MainActivity.USER_EMAIL_TAG);
+
+        fbData = new FirebaseData(this);
+        fbData.open(user);
 
         txtDate = findViewById(R.id.txtDateDetail);
         txtAircraftNumber = findViewById(R.id.txtAircraftNumberDetail);
         txtDescription = findViewById(R.id.txtDescriptionDetail);
+        txtType = findViewById(R.id.txtPlaneTypeDetail);
 
         btnSave = findViewById(R.id.btnSave);
 
@@ -41,28 +47,23 @@ public class NewEntryActivity extends AppCompatActivity {
         String dateStr = formatter.format(Calendar.getInstance().getTime());
 
 
-        Bundle extras = getIntent().getExtras();
-        logEntry = (LogEntry) extras.getSerializable(MainActivity.LOG_ENTRY_TAG);
-
-        if(logEntry.getDateStr().isEmpty()){
-            txtDate.setText(dateStr);
-        }
-        else {
-            txtDate.setText(logEntry.getDateStr());
-            txtAircraftNumber.setText(logEntry.getAircraftNum());
-            txtDescription.setText(logEntry.getDescription());
-        }
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogEntry newLogEntry = new LogEntry(txtDate.getText().toString(), txtAircraftNumber.getText().toString(), txtDescription.getText().toString());
+                String newDate = txtDate.getText().toString();
+                String newShipNum = txtAircraftNumber.getText().toString();
+                String newPlaneType = txtType.getText().toString();
+                String newDescription = txtDescription.getText().toString();
+
+
+                LogEntry newLogEntry = new LogEntry(newDate, newShipNum, newPlaneType, newDescription);
 
                 if(newLogEntry.valid()) {
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
                     startActivity(intent);
                 }
                 else{
-                    txtAircraftNumber.setText(newLogEntry.getAircraftNum());
+                    txtAircraftNumber.setText(newLogEntry.getShipNum());
                     txtDate.setText(newLogEntry.getDateStr());
                 }
             }

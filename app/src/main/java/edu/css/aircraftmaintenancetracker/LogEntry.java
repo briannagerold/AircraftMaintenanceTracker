@@ -9,7 +9,8 @@ public class LogEntry implements Serializable {
 
     private String key;
     private String dateStr;
-    private String aircraftNum;
+    private String shipNum;
+    private String planeType;
     private String description;
 
     private final String dateError = "Enter as MM/DD/YYYY";
@@ -17,20 +18,23 @@ public class LogEntry implements Serializable {
 
     public LogEntry(){
         dateStr = "";
-        aircraftNum = "";
+        shipNum = "";
+        planeType = "";
         description = "";
     }
 
-    public LogEntry(String dateStr, String aircraftNum, String description){
+    public LogEntry(String dateStr, String shipNum, String planeType, String description){
         setDateStr(dateStr);
-        setAircraftNum(aircraftNum);
+        setShipNum(shipNum);
+        setPlaneType(planeType);
         setDescription(description);
     }
 
-    public LogEntry(String key, String dateStr, String aircraftNum, String description){
+    public LogEntry(String key, String dateStr, String shipNum, String planeType, String description){
         setKey(key);
         setDateStr(dateStr);
-        setAircraftNum(aircraftNum);
+        setShipNum(shipNum);
+        setPlaneType(planeType);
         setDescription(description);
     }
 
@@ -51,20 +55,22 @@ public class LogEntry implements Serializable {
     }
 
 
-    public void setAircraftNum(String aircraftNum){
-        if(!aircraftNum.equals("")) {
-            Integer num = Integer.parseInt(aircraftNum);
+    public void setShipNum(String shipNum){
+        this.shipNum = numError;
+        if(!shipNum.equals("")) {
+            Integer num = Integer.parseInt(shipNum);
             if (num < 10000 && num > 99) {
-                this.aircraftNum = aircraftNum;
+                this.shipNum = shipNum;
             }
-        }
-        else {
-            this.aircraftNum = numError;
         }
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setPlaneType(String planeType){
+        this.planeType = planeType;
     }
 
     public String getKey(){
@@ -75,23 +81,20 @@ public class LogEntry implements Serializable {
         return dateStr;
     }
 
-    public String getAircraftNum(){
-        return aircraftNum;
+    public String getShipNum(){
+        return shipNum;
     }
 
-//    public int getAircreaftNumInt(){
-//        if(!aircraftNum.equals(numError)){
-//            return Integer.parseInt(aircraftNum);
-//        }
-//            return 0;
-//    }
 
     public String getDescription (){
         return description;
     }
 
-    public boolean valid(){
-        return !(getAircraftNum().equals(numError) || getDateStr().equals(dateError));
+    public String getPlaneType() {
+        return planeType;
+    }
 
+    public boolean valid(){
+        return !(getShipNum().equals(numError) || getDateStr().equals(dateError));
     }
 }

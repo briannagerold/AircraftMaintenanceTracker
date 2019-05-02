@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class DetailActivity extends AppCompatActivity {
 
-    TextView txtDate, txtDescription, txtNum;
+    TextView txtDate, txtDescription, txtNum, txtType;
     LogEntry logEntry;
 
     @Override
@@ -24,13 +24,15 @@ public class DetailActivity extends AppCompatActivity {
         txtDate = findViewById(R.id.txtDateDetail);
         txtDescription = findViewById(R.id.txtDescriptionDetail);
         txtNum = findViewById(R.id.txtAircraftNumberDetail);
+        txtType = findViewById(R.id.txtPlaneTypeDetail);
 
         Bundle extras = getIntent().getExtras();
         logEntry = (LogEntry) extras.getSerializable(MainActivity.LOG_ENTRY_TAG);
 
         txtDate.setText(logEntry.getDateStr());
-        txtNum.setText(logEntry.getAircraftNum());
+        txtNum.setText(logEntry.getShipNum());
         txtDescription.setText(logEntry.getDescription());
+        txtType.setText(logEntry.getPlaneType());
 
 
     }
