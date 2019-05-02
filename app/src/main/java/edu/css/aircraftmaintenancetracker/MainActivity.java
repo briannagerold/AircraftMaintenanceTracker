@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 logEntryAdapter = new LogEntryAdapter(MainActivity.this, android.R.layout.simple_list_item_single_choice, logEntryList);
                 // Apply the adapter to the list
                 listViewLogs.setAdapter(logEntryAdapter);
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -153,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             mFirebaseData.signOut();
+            logEntryList.clear();
+            updateList();
             checkLogin();
             return true;
         }
@@ -194,6 +197,10 @@ public class MainActivity extends AppCompatActivity {
         userEmail = userEmail.replace(']', '_');
     }
 
-
+    public void updateList(){
+        logEntryAdapter = new LogEntryAdapter(MainActivity.this, android.R.layout.simple_list_item_single_choice, logEntryList);
+        // Apply the adapter to the list
+        listViewLogs.setAdapter(logEntryAdapter);
+    }
 
 }

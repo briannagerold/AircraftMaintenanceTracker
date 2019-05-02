@@ -17,7 +17,6 @@ public class NewEntryActivity extends AppCompatActivity {
 
     EditText txtDate, txtAircraftNumber, txtDescription, txtType;
     Button btnSave;
-    LogEntry logEntry = new LogEntry();
     FirebaseData fbData;
     String user;
 
@@ -46,6 +45,7 @@ public class NewEntryActivity extends AppCompatActivity {
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         String dateStr = formatter.format(Calendar.getInstance().getTime());
 
+        txtDate.setText(dateStr);
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +59,8 @@ public class NewEntryActivity extends AppCompatActivity {
                 LogEntry newLogEntry = new LogEntry(newDate, newShipNum, newPlaneType, newDescription);
 
                 if(newLogEntry.valid()) {
+                    fbData.createLogEntry(newLogEntry);
+
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
                     startActivity(intent);
                 }
