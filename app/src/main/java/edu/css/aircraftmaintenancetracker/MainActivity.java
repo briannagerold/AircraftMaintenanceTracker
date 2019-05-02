@@ -5,17 +5,17 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -47,7 +47,11 @@ public class MainActivity extends AppCompatActivity {
     String searchField = "Date"; //default search field - stores the string of field
     ListView listViewLogs; //The list view that displays all the entries
 
-
+    /**
+     * Runs when the app is first started. It sets up
+     * all the buttons, the spinner and the list view
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +60,230 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         txtSearch = findViewById(R.id.txtSearch);
-        btnSearch = findViewById(R.id.btnSearch);
-        btnAll = findViewById(R.id.btnAll);
+
+        setUpSpinner(); //set up the spinner
+        setUpButtons(); //set up all the buttons
+        setUpListView(); //set up the list view
+    }
+
+    /**
+     *Check the if the user is logged in
+     * sets up firebase and populates the list view
+     * with data for the user
+     */
+    @Override
+    public void onStart(){
+        super.onStart();
+        checkLogin();
+        setupFirebaseDataChange();
+    }
+
+    /**
+     * Set up the firebase database
+     * also sets up the listener for data changes
+     */
+    private void setupFirebaseDataChange() {
+        mFirebaseData = new FirebaseData(this); //new firebase with context
+        mDbRef = mFirebaseData.open(userEmail); //opens the database connection under the user
+        mDbRef.addValueEventListener(new ValueEventListener() {
+            /**
+             * When something is added to the list then it will re populate the list view
+             * with the new list of entries
+             * @param dataSnapshot
+             */
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                logEntryList = mFirebaseData.getList(dataSnapshot); //get the list from firebase
+                //update the list view
+                updateList(logEntryList);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    /**
+     * Create the menu - default code
+     * @param menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    /**
+     * set up the actions for the menu
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //get the item clicked
+        int id = item.getItemId();
+
+        //if logout (only option) then sign out
+        if (id == R.id.action_logout) {
+            mFirebaseData.signOut(); //sign out
+            checkLogin(); //call the login screen
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Called when the login active returns
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_LOGIN) {
+            //if it returns from the login activity check the login and get the user
+            checkLogin();
+        }
+    }
+
+    /**
+     * Check to see if someone is logged in
+     * if yes get the user email
+     */
+    public void checkLogin(){
+        //see if someone is logged in
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account != null) { //if someone is logged in
+            //get the user's email
+            userEmail = account.getEmail();
+            //clean the email so it doesn't include illegal characters
+            cleanUserEmail();
+        }
+        else{
+            //if not logged in - go to the login in screen
+            Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
+            startActivityForResult(loginIntent, RC_LOGIN);
+        }
+    }
+
+    /**
+     * replace illegal characters with _
+     */
+    public void cleanUserEmail(){
+        userEmail = userEmail.replace('.', '_');
+        userEmail = userEmail.replace('#', '_');
+        userEmail = userEmail.replace('$', '_');
+        userEmail = userEmail.replace('[', '_');
+        userEmail = userEmail.replace(']', '_');
+    }
+
+    /**
+     * Create a new LogEntryAdapter with a list that is passed
+     * @param logList
+     */
+    public void updateList(List<LogEntry> logList){
+        //create a new adapter
+        logEntryAdapter = new LogEntryAdapter(MainActivity.this, android.R.layout.simple_list_item_single_choice, logList);
+        // Apply the adapter to the list
+        listViewLogs.setAdapter(logEntryAdapter);
+    }
+
+    /**
+     * Use the search field and search term to search the list for matches
+     */
+    public void search(){
+        String searchTerm = txtSearch.getText().toString();
+        if(searchField.equals("Date")){ //if by date
+            searchLogEntryList = searchByDate(searchTerm); //call searchByDate with the search term
+        }
+        else if (searchField.equals("Ship #")){ //if they want to search by ship number
+            searchLogEntryList = searchByShipNum(searchTerm); //call searchByShipNum with the search term
+        }
+        else if(searchField.equals("Plane Type")){ // if they want to search by plane type
+            searchLogEntryList = searchByType(searchTerm); //call searchByType with the search term
+        }
+        else if(searchField.equals("Description")){ //if by description
+            searchLogEntryList = searchByDescription(searchTerm); //call searchByDescription with search term
+        }
+
+        updateList(searchLogEntryList); //update the list view with the search results
+    }
+
+    /**
+     * search by the date
+     * @param term
+     * @return
+     */
+    public List<LogEntry> searchByDate(String term){
+        List<LogEntry> temp = new ArrayList<>(); //new list
+
+        for(int i = 0; i < logEntryList.size(); i++){ //loop- looking for matches
+            if(logEntryList.get(i).getDateStr().contains(term)){ //if the date of the contains the search term
+                temp.add(logEntryList.get(i)); //add it to the list
+            }
+        }
+
+        return temp; //return the list of matches
+    }
+
+    /**
+     * search by ship number
+     * @param term
+     * @return
+     */
+    public List<LogEntry> searchByShipNum(String term){
+        List<LogEntry> temp = new ArrayList<>(); //new list
+
+        for(int i = 0; i < logEntryList.size(); i++){ //loop- looking for matches
+            if(logEntryList.get(i).getShipNum().equals(term)){ //if the ship number matches the search term
+                temp.add(logEntryList.get(i)); //add it to the list
+            }
+        }
+
+        return temp; //return the list of matches
+    }
+
+    /**
+     * search by plane type
+     * @param term
+     * @return
+     */
+    public List<LogEntry> searchByType(String term){
+        List<LogEntry> temp = new ArrayList<>(); //new list
+
+        for(int i = 0; i < logEntryList.size(); i++){ //loop - looking for matches
+            if(logEntryList.get(i).getPlaneType().contains(term)){ //if the type contains the search term
+                temp.add(logEntryList.get(i)); //add to the list
+            }
+        }
+
+        return temp; //return the list of matches
+    }
+
+    /**
+     * search by the description
+     * @param term
+     * @return
+     */
+    public List<LogEntry> searchByDescription(String term){
+        List<LogEntry> temp = new ArrayList<>(); //new list
+
+        for(int i = 0; i < logEntryList.size(); i++){ //loop - looking for matches
+            if(logEntryList.get(i).getDescription().contains(term)){ //if the description contains the term
+                temp.add(logEntryList.get(i)); //add to the list
+            }
+        }
+
+        return temp; //return the list of results
+    }
+
+    /**
+     * set up the spinner to get the text of what was selected
+     */
+    public void setUpSpinner(){
         spnSearch = findViewById(R.id.spnSearchType);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.SearchTypes, android.R.layout.simple_spinner_item);
@@ -70,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
         spnSearch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //set the search field to what was selected
                 searchField = parent.getItemAtPosition(position).toString();
             }
             @Override
@@ -77,20 +304,25 @@ public class MainActivity extends AppCompatActivity {
                 //Another interface callback
             }
         });
+    }
 
+    /**
+     * set up the fab, all and search buttons
+     */
+    public void setUpButtons(){
+        btnAll = findViewById(R.id.btnAll);
         btnAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                logEntryAdapter = new LogEntryAdapter(MainActivity.this, android.R.layout.simple_list_item_single_choice, logEntryList);
-                // Apply the adapter to the list
-                listViewLogs.setAdapter(logEntryAdapter);
+                updateList(logEntryList); //update the list to show all the entries
             }
         });
 
+        btnSearch = findViewById(R.id.btnSearch);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                search();
+                search(); //search the list
             }
         });
 
@@ -98,182 +330,33 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            Intent intent = new Intent(view.getContext(), NewEntryActivity.class);
-            intent.putExtra(USER_EMAIL_TAG, userEmail);
-            startActivity(intent);
+                //start the NewEntryActivity and pass the user email
+                Intent intent = new Intent(view.getContext(), NewEntryActivity.class);
+                intent.putExtra(USER_EMAIL_TAG, userEmail);
+                startActivity(intent);
             }
         });
+    }
+
+    /**
+     * set up the list view
+     */
+    public void setUpListView(){
 
         listViewLogs = findViewById(R.id.listLogs);
 
         listViewLogs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            LogEntry logEntry = (LogEntry) parent.getItemAtPosition(position);
+                //get the item that was selected
+                LogEntry logEntry = (LogEntry) parent.getItemAtPosition(position);
 
-            Intent detailActIntent = new Intent(parent.getContext(), DetailActivity.class);
-            detailActIntent.putExtra(LOG_ENTRY_TAG, logEntry);
-            startActivity(detailActIntent);
-            }
-        });
-
-    }
-
-    private void setupFirebaseDataChange() {
-        mFirebaseData = new FirebaseData(this);
-        mDbRef = mFirebaseData.open(userEmail);
-        mDbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                logEntryList = mFirebaseData.getList(dataSnapshot);
-                // Instantiate a custom adapter for displaying each fish
-                updateList(logEntryList);
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                //start the detail screen and pass the selected log entry
+                Intent detailActIntent = new Intent(parent.getContext(), DetailActivity.class);
+                detailActIntent.putExtra(LOG_ENTRY_TAG, logEntry);
+                startActivity(detailActIntent);
             }
         });
     }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_logout) {
-            mFirebaseData.signOut();
-            logEntryList.clear();
-            updateList(logEntryList);
-            checkLogin();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onStart(){
-        Log.d("CIS 3334", "IN ON START");
-        super.onStart();
-        checkLogin();
-        setupFirebaseDataChange();
-    }
-
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == RC_LOGIN) {
-            checkLogin();
-        }
-    }
-
-    public void checkLogin(){
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account != null) {
-            userEmail = account.getEmail();
-            cleanUserEmail();
-        }
-        else{
-            Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
-            startActivityForResult(loginIntent, RC_LOGIN);
-        }
-    }
-
-    public void cleanUserEmail(){
-        userEmail = userEmail.replace('.', '_');
-        userEmail = userEmail.replace('#', '_');
-        userEmail = userEmail.replace('$', '_');
-        userEmail = userEmail.replace('[', '_');
-        userEmail = userEmail.replace(']', '_');
-    }
-
-    public void updateList(List<LogEntry> logList){
-        logEntryAdapter = new LogEntryAdapter(MainActivity.this, android.R.layout.simple_list_item_single_choice, logList);
-        // Apply the adapter to the list
-        listViewLogs.setAdapter(logEntryAdapter);
-    }
-
-    public void search(){
-        String searchTerm = txtSearch.getText().toString();
-        if(searchField.equals("Date")){
-            searchLogEntryList = searchByDate(searchTerm);
-        }
-        else if (searchField.equals("Ship #")){
-            searchLogEntryList = searchByShipNum(searchTerm);
-        }
-        else if(searchField.equals("Plane Type")){
-            searchLogEntryList = searchByType(searchTerm);
-        }
-        else if(searchField.equals("Description")){
-            searchLogEntryList = searchByDescription(searchTerm);
-        }
-
-        updateList(searchLogEntryList);
-    }
-
-    public List<LogEntry> searchByDate(String term){
-        List<LogEntry> temp = new ArrayList<>();
-
-        for(int i = 0; i < logEntryList.size(); i++){
-            if(logEntryList.get(i).getDateStr().equals(term)){
-                temp.add(logEntryList.get(i));
-            }
-        }
-
-        return temp;
-    }
-
-
-    public List<LogEntry> searchByShipNum(String term){
-        List<LogEntry> temp = new ArrayList<>();
-
-        for(int i = 0; i < logEntryList.size(); i++){
-            if(logEntryList.get(i).getShipNum().equals(term)){
-                temp.add(logEntryList.get(i));
-            }
-        }
-
-        return temp;
-    }
-
-
-    public List<LogEntry> searchByType(String term){
-        List<LogEntry> temp = new ArrayList<>();
-
-        for(int i = 0; i < logEntryList.size(); i++){
-            if(logEntryList.get(i).getPlaneType().contains(term)){
-                temp.add(logEntryList.get(i));
-            }
-        }
-
-        return temp;
-    }
-
-
-    public List<LogEntry> searchByDescription(String term){
-        List<LogEntry> temp = new ArrayList<>();
-
-        for(int i = 0; i < logEntryList.size(); i++){
-            if(logEntryList.get(i).getDescription().contains(term)){
-                temp.add(logEntryList.get(i));
-            }
-        }
-
-        return temp;
-    }
-
 
 }

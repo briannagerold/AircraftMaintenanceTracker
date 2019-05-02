@@ -21,14 +21,17 @@ public class DetailActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //set up the text views
         txtDate = findViewById(R.id.txtDateDetail);
         txtDescription = findViewById(R.id.txtDescriptionDetail);
         txtNum = findViewById(R.id.txtAircraftNumberDetail);
         txtType = findViewById(R.id.txtPlaneTypeDetail);
 
+        //get the log entry sent in the bundle
         Bundle extras = getIntent().getExtras();
         logEntry = (LogEntry) extras.getSerializable(MainActivity.LOG_ENTRY_TAG);
 
+        //set the text views to the values of the log entry
         txtDate.setText(logEntry.getDateStr());
         txtNum.setText(logEntry.getShipNum());
         txtDescription.setText(logEntry.getDescription());

@@ -28,43 +28,51 @@ public class NewEntryActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        //get the user from the bundle that was passed
         Bundle extras = getIntent().getExtras();
         user = extras.getString(MainActivity.USER_EMAIL_TAG);
 
+        //set up firebase and open the connection
         fbData = new FirebaseData(this);
         fbData.open(user);
 
+        //set up the text views
         txtDate = findViewById(R.id.txtDateDetail);
         txtAircraftNumber = findViewById(R.id.txtAircraftNumberDetail);
         txtDescription = findViewById(R.id.txtDescriptionDetail);
         txtType = findViewById(R.id.txtPlaneTypeDetail);
 
-        btnSave = findViewById(R.id.btnSave);
-
+        //get the current date
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         String dateStr = formatter.format(Calendar.getInstance().getTime());
-
+        //pre-fill the current date
         txtDate.setText(dateStr);
 
+
+        //set up the button
+        btnSave = findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String newDate = txtDate.getText().toString();
-                String newShipNum = txtAircraftNumber.getText().toString();
-                String newPlaneType = txtType.getText().toString();
-                String newDescription = txtDescription.getText().toString();
+                String newDate = txtDate.getText().toString(); //get the date
+                String newShipNum = txtAircraftNumber.getText().toString(); //get the ship number
+                String newPlaneType = txtType.getText().toString(); //get the plane type
+                String newDescription = txtDescription.getText().toString(); //get the description
 
-
+                //create a new log entry
                 LogEntry newLogEntry = new LogEntry(newDate, newShipNum, newPlaneType, newDescription);
 
+                //check if it is a valid log entry
                 if(newLogEntry.valid()) {
+                    //add to the database
                     fbData.createLogEntry(newLogEntry);
 
+                    //return to the main activity
                     Intent intent = new Intent(v.getContext(), MainActivity.class);
                     startActivity(intent);
                 }
                 else{
+                    //if not valid show error messages to the user
                     txtAircraftNumber.setText(newLogEntry.getShipNum());
                     txtDate.setText(newLogEntry.getDateStr());
                 }
