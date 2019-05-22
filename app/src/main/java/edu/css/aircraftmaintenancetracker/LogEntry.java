@@ -1,11 +1,13 @@
 package edu.css.aircraftmaintenancetracker;
 
+import android.content.Intent;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class LogEntry implements Serializable {
+public class LogEntry implements Serializable, Comparable<LogEntry> {
 
     private String key; //key for firebase
     private String dateStr; //date of work
@@ -14,7 +16,6 @@ public class LogEntry implements Serializable {
     private String description; //description of work done on the aircraft
 
     private final String dateError = "Enter as MM/DD/YYYY"; //if date is not in correct format
-    private final String numError = "Enter a valid number"; //if ship number is not valid
 
     /**
      * Empty constructor
@@ -82,13 +83,7 @@ public class LogEntry implements Serializable {
      * @param shipNum
      */
     public void setShipNum(String shipNum){
-        this.shipNum = numError; //will be an error message if it doesn't pass
-        if(!shipNum.equals("")) { //not empty
-            Integer num = Integer.parseInt(shipNum); //as an int
-            if (num < 10000 && num > 99) { //3 or 4 digits
-                this.shipNum = shipNum; //set the ship number
-            }
-        }
+        this.shipNum = shipNum; //set the ship number
     }
 
     /**
@@ -152,6 +147,45 @@ public class LogEntry implements Serializable {
      * @return
      */
     public boolean valid(){
-        return !(getShipNum().equals(numError) || getDateStr().equals(dateError));
+        return !(getDateStr().equals(dateError));
     }
+
+    @Override
+    public int compareTo(LogEntry newLogEntry) {
+        int month = Integer.parseInt(this.getDateStr().substring(0, 2));
+        int day = Integer.parseInt(this.getDateStr().substring(3, 5));
+        int year = Integer.parseInt(this.getDateStr().substring(6, 10));
+
+        int newMonth = Integer.parseInt(newLogEntry.getDateStr().substring(0, 2));
+        int newDay = Integer.parseInt(newLogEntry.getDateStr().substring(3, 5));
+        int newYear = Integer.parseInt(newLogEntry.getDateStr().substring(6, 10));
+
+        if(year > newYear){
+            return -1;
+        }
+        else if(year == newYear){
+            if(month > newMonth){
+                return -1;
+            }
+            else if(month == newMonth){
+                if(day > newDay){
+                    return -1;
+                }
+                else if(day == newDay){
+                    return 0;
+                }
+                else {
+                    return 1;
+                }
+            }
+            else {
+                return 1;
+            }
+        }
+        else{
+            return 1;
+        }
+
+    }
+
 }

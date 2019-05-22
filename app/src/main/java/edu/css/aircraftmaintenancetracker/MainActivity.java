@@ -25,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         txtSearch = findViewById(R.id.txtSearch);
 
-        setUpSpinner(); //set up the spinner
+        //setUpSpinner(); //set up the spinner
         setUpButtons(); //set up all the buttons
         setUpListView(); //set up the list view
     }
@@ -95,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 logEntryList = mFirebaseData.getList(dataSnapshot); //get the list from firebase
                 //update the list view
+                Collections.sort(logEntryList);
                 updateList(logEntryList);
             }
             @Override
@@ -196,115 +199,52 @@ public class MainActivity extends AppCompatActivity {
      */
     public void search(){
         String searchTerm = txtSearch.getText().toString();
-        if(searchField.equals("Date")){ //if by date
-            searchLogEntryList = searchByDate(searchTerm); //call searchByDate with the search term
-        }
-        else if (searchField.equals("Ship #")){ //if they want to search by ship number
-            searchLogEntryList = searchByShipNum(searchTerm); //call searchByShipNum with the search term
-        }
-        else if(searchField.equals("Plane Type")){ // if they want to search by plane type
-            searchLogEntryList = searchByType(searchTerm); //call searchByType with the search term
-        }
-        else if(searchField.equals("Description")){ //if by description
-            searchLogEntryList = searchByDescription(searchTerm); //call searchByDescription with search term
+        searchLogEntryList = new ArrayList<>();
+
+        for(int i = 0; i < logEntryList.size(); i++){ //loop- looking for matches
+            if(logEntryList.get(i).getDateStr().contains(searchTerm)){ //if the date of the contains the search term
+                searchLogEntryList.add(logEntryList.get(i)); //add it to the list
+            }
+            else if(logEntryList.get(i).getShipNum().contains(searchTerm)){
+                searchLogEntryList.add(logEntryList.get(i));
+            }
+            else if(logEntryList.get(i).getPlaneType().contains(searchTerm)){
+                searchLogEntryList.add(logEntryList.get(i));
+            }
+            else if(logEntryList.get(i).getDescription().contains(searchTerm)){
+                searchLogEntryList.add(logEntryList.get(i));
+            }
         }
 
         updateList(searchLogEntryList); //update the list view with the search results
     }
 
-    /**
-     * search by the date
-     * @param term
-     * @return
-     */
-    public List<LogEntry> searchByDate(String term){
-        List<LogEntry> temp = new ArrayList<>(); //new list
-
-        for(int i = 0; i < logEntryList.size(); i++){ //loop- looking for matches
-            if(logEntryList.get(i).getDateStr().contains(term)){ //if the date of the contains the search term
-                temp.add(logEntryList.get(i)); //add it to the list
-            }
-        }
-
-        return temp; //return the list of matches
-    }
-
-    /**
-     * search by ship number
-     * @param term
-     * @return
-     */
-    public List<LogEntry> searchByShipNum(String term){
-        List<LogEntry> temp = new ArrayList<>(); //new list
-
-        for(int i = 0; i < logEntryList.size(); i++){ //loop- looking for matches
-            if(logEntryList.get(i).getShipNum().equals(term)){ //if the ship number matches the search term
-                temp.add(logEntryList.get(i)); //add it to the list
-            }
-        }
-
-        return temp; //return the list of matches
-    }
-
-    /**
-     * search by plane type
-     * @param term
-     * @return
-     */
-    public List<LogEntry> searchByType(String term){
-        List<LogEntry> temp = new ArrayList<>(); //new list
-
-        for(int i = 0; i < logEntryList.size(); i++){ //loop - looking for matches
-            if(logEntryList.get(i).getPlaneType().contains(term)){ //if the type contains the search term
-                temp.add(logEntryList.get(i)); //add to the list
-            }
-        }
-
-        return temp; //return the list of matches
-    }
-
-    /**
-     * search by the description
-     * @param term
-     * @return
-     */
-    public List<LogEntry> searchByDescription(String term){
-        List<LogEntry> temp = new ArrayList<>(); //new list
-
-        for(int i = 0; i < logEntryList.size(); i++){ //loop - looking for matches
-            if(logEntryList.get(i).getDescription().contains(term)){ //if the description contains the term
-                temp.add(logEntryList.get(i)); //add to the list
-            }
-        }
-
-        return temp; //return the list of results
-    }
-
-    /**
-     * set up the spinner to get the text of what was selected
-     */
-    public void setUpSpinner(){
-        spnSearch = findViewById(R.id.spnSearchType);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.SearchTypes, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spnSearch.setAdapter(adapter);
-
-
-        spnSearch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //set the search field to what was selected
-                searchField = parent.getItemAtPosition(position).toString();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //Another interface callback
-            }
-        });
-    }
+//
+//    /**
+//     * set up the spinner to get the text of what was selected
+//     */
+//    public void setUpSpinner(){
+//        spnSearch = findViewById(R.id.spnSearchType);
+//
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.SearchTypes, android.R.layout.simple_spinner_item);
+//        // Specify the layout to use when the list of choices appears
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        // Apply the adapter to the spinner
+//        spnSearch.setAdapter(adapter);
+//
+//
+//        spnSearch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                //set the search field to what was selected
+//                searchField = parent.getItemAtPosition(position).toString();
+//            }
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                //Another interface callback
+//            }
+//        });
+//    }
 
     /**
      * set up the fab, all and search buttons
