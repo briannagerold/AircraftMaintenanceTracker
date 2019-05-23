@@ -293,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //start the detail screen and pass the selected log entry
                 Intent detailActIntent = new Intent(parent.getContext(), DetailActivity.class);
+                detailActIntent.putExtra(USER_EMAIL_TAG, userEmail);
                 detailActIntent.putExtra(LOG_ENTRY_TAG, logEntry);
                 startActivity(detailActIntent);
             }

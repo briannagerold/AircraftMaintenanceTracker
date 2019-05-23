@@ -37,10 +37,10 @@ public class NewEntryActivity extends AppCompatActivity {
         fbData.open(user);
 
         //set up the text views
-        txtDate = findViewById(R.id.txtDateDetail);
-        txtAircraftNumber = findViewById(R.id.txtAircraftNumberDetail);
-        txtDescription = findViewById(R.id.txtDescriptionDetail);
-        txtType = findViewById(R.id.txtPlaneTypeDetail);
+        txtDate = findViewById(R.id.txtDateEdit);
+        txtAircraftNumber = findViewById(R.id.txtAircraftNumberEdit);
+        txtDescription = findViewById(R.id.txtDescriptionEdit);
+        txtType = findViewById(R.id.txtPlaneTypeEdit);
 
         //get the current date
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");

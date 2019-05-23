@@ -15,11 +15,26 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/design_default_color_primary_dark"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_detail" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_detail" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        app:backgroundTint="@color/design_default_color_primary_dark"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="right|bottom"
+        app:rippleColor="@color/design_default_color_primary_dark"
+        app:srcCompat="@drawable/ic_edit_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

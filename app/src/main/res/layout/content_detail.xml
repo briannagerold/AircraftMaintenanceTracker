@@ -22,10 +22,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.483"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDateDetail" />
+        app:layout_constraintTop_toBottomOf="@+id/txtDateEdit" />
 
     <TextView
-        android:id="@+id/txtAircraftNumberDetail"
+        android:id="@+id/txtAircraftNumberEdit"
         android:layout_width="300dp"
         android:layout_height="21dp"
         android:layout_marginStart="8dp"
@@ -55,7 +55,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtDateDetail"
+        android:id="@+id/txtDateEdit"
         android:layout_width="300dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
@@ -80,10 +80,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtPlaneTypeDetail" />
+        app:layout_constraintTop_toBottomOf="@+id/txtPlaneTypeEdit" />
 
     <TextView
-        android:id="@+id/txtDescriptionDetail"
+        android:id="@+id/txtDescriptionEdit"
         android:layout_width="300dp"
         android:layout_height="237dp"
         android:layout_marginStart="8dp"
@@ -106,10 +106,10 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtAircraftNumberDetail" />
+        app:layout_constraintTop_toBottomOf="@+id/txtAircraftNumberEdit" />
 
     <TextView
-        android:id="@+id/txtPlaneTypeDetail"
+        android:id="@+id/txtPlaneTypeEdit"
         android:layout_width="300dp"
         android:layout_height="22dp"
         android:layout_marginStart="8dp"

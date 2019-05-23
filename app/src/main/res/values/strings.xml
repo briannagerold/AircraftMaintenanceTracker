@@ -20,4 +20,6 @@
         <item>Plane Type</item>
         <item>Description</item>
     </string-array>
+    <string name="title_activity_edit">EditActivity</string>
+    <string name="Delete">Delete</string>
 </resources>

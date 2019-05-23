@@ -67,6 +67,7 @@ public class FirebaseData {
         //get a new key
         String key = dbRef.push().getKey();
 
+        logEntry.setKey(key);
         //add the new log entry to the database under the user and the key
         dbRef.child(key).setValue(logEntry);
 
@@ -95,6 +96,9 @@ public class FirebaseData {
         mGoogleSignInClient.signOut();
     }
 
-
+    public void delete(LogEntry logEntry){
+        String key = logEntry.getKey();
+        dbRef.child(key).removeValue();
+    }
 
 }
